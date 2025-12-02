@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam Explore App</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1400px;
+        }
+
+        .phone {
+            width: 320px;
+            height: 680px;
+            background: #1a1a1a;
+            border-radius: 50px;
+            padding: 12px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.3);
+            position: relative;
+            display: none;
+        }
+
+        .phone.active {
+            display: block;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .notch {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 30px;
+            background: #1a1a1a;
+            border-radius: 20px;
+            z-index: 100;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 12px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 50;
+        }
+
+        .status-bar.dark {
+            color: #000;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        /* Screen 1: Splash */
+        .screen-splash {
+            background: #2563eb;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen-splash .globe-top {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            border-radius: 50%;
+        }
+
+        .screen-splash .globe-bottom {
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 180px;
+            height: 180px;
+        }
+
+        .screen-splash h1 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .screen-splash p {
+            color: #fff;
+            font-size: 11px;
+            text-align: center;
+            margin-top: 10px;
+            padding: 0 20px;
+        }
+
+        .traveler-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        /* Screen 2: Hello */
+        .screen-hello {
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400') center/cover;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .screen-hello::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .screen-hello .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .screen-hello h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .screen-hello p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .btn-outline {
+            background: #fff;
+            color: #333;
+            border: 2px solid #ddd;
+            padding: 15px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        /* Screen 3: Sign In Options */
+        .screen-signin {
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400') center/cover;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .social-btn {
+            background: #fff;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .social-btn img, .social-btn i {
+            width: 24px;
+            height: 24px;
+            font-size: 24px;
+        }
+
+        .link-text {
+            font-size: 12px;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .link-text a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        /* Screen 4: Sign Up */
+        .screen-signup {
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400') center/cover;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .screen-signup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.4);
+        }
+
+        .form-group {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 15px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(100,150,255,0.3);
+            border-radius: 30px;
+            background: rgba(255,255,255,0.9);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: #888;
+        }
+
+        /* Screen 5: Home */
+        .screen-home {
+            background: #f5f5f5;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .home-header {
+            padding: 50px 20px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .home-header .greeting {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .home-header .greeting span {
+            font-weight: 600;
+        }
+
+        .home-header .subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            overflow: hidden;
+        }
+
+        .search-box {
+            margin: 10px 20px;
+            padding: 12px 20px;
+            background: #fff;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px 10px;
+        }
+
+        .section-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .section-header a {
+            font-size: 12px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            padding: 0 20px;
+            overflow-x: auto;
+        }
+
+        .category-tab {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+        }
+
+        .category-tab.active {
+            background: #333;
+            color: #fff;
+        }
+
+        .category-tab:not(.active) {
+            background: #e5e5e5;
+            color: #333;
+        }
+
+        .places-grid {
+            display: flex;
+            gap: 15px;
+            padding: 15px 20px;
+            overflow-x: auto;
+        }
+
+        .place-card {
+            min-width: 150px;
+            height: 200px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.7));
+        }
+
+        .place-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .place-card .info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: #fff;
+        }
+
+        .place-card .name {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .place-card .location {
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .place-card .bookmark {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.3);
+            border: none;
+            padding: 8px;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .place-card .rating {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #fff;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #999;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: #2563eb;
+        }
+
+        /* Screen 6: Place Detail */
+        .screen-detail {
+            background: #fff;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .detail-image {
+            height: 280px;
+            background: url('https://images.unsplash.com/photo-1570366583862-f91883984fde?w=400') center/cover;
+            position: relative;
+        }
+
+        .detail-image .back-btn, .detail-image .save-btn {
+            position: absolute;
+            top: 50px;
+            background: rgba(255,255,255,0.3);
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .detail-image .back-btn {
+            left: 15px;
+        }
+
+        .detail-image .save-btn {
+            right: 15px;
+        }
+
+        .detail-card {
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            right: 15px;
+            background: linear-gradient(to right, #1e40af, #3b82f6);
+            border-radius: 15px 15px 0 0;
+            padding: 15px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-card h2 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .detail-card .location {
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .detail-card .price-tag {
+            background: #e5e5e5;
+            color: #333;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .detail-card .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        .detail-tabs {
+            display: flex;
+            padding: 15px 20px;
+            gap: 30px;
+        }
+
+        .detail-tabs span {
+            font-size: 14px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .detail-tabs span.active {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .detail-info {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .info-item i {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .detail-description {
+            padding: 15px 20px;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .book-btn {
+            margin: 15px 20px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            width: calc(100% - 40px);
+            cursor: pointer;
+        }
+
+        /* Screen 7: Bus Tickets */
+        .screen-booking {
+            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400') top/cover;
+            height: 100%;
+        }
+
+        .booking-tabs {
+            display: flex;
+            gap: 10px;
+            padding: 60px 20px 20px;
+            justify-content: center;
+        }
+
+        .booking-tab {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .booking-tab.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .booking-tab:not(.active) {
+            background: #fff;
+            color: #333;
+        }
+
+        .booking-form {
+            background: #2563eb;
+            margin: 10px 15px;
+            border-radius: 25px;
+            padding: 20px;
+        }
+
+        .booking-form .form-input {
+            margin-bottom: 12px;
+            border: none;
+            padding: 12px 15px;
+        }
+
+        .swap-btn {
+            position: absolute;
+            right: 30px;
+            background: #fff;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+
+        .checkbox-row input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-tab {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .filter-tab.active {
+            background: #333;
+            color: #fff;
+        }
+
+        .filter-tab:not(.active) {
+            background: #fff;
+            color: #333;
+        }
+
+        .search-btn {
+            background: #fff;
+            color: #2563eb;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Screen 8: Add Guest */
+        .screen-guest {
+            background: #fff;
+            height: 100%;
+        }
+
+        .guest-header {
+            background: #2563eb;
+            color: #fff;
+            padding: 50px 20px 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .guest-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .guest-row .label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .guest-row .label i {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .counter button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .counter span {
+            width: 30px;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .apply-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            right: 20px;
+            background: #f97316;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Screen 9: Account */
+        .screen-account {
+            background: #fdf6f0;
+            height: 100%;
+        }
+
+        .account-header {
+            background: #2563eb;
+            color: #fff;
+            padding: 50px 20px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .account-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .profile-card {
+            background: #1e40af;
+            margin: 0 15px;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            transform: translateY(-10px);
+        }
+
+        .profile-card .avatar {
+            width: 50px;
+            height: 50px;
+        }
+
+        .profile-card .info {
+            color: #fff;
+        }
+
+        .profile-card .name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .profile-card .email {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .profile-card .link {
+            font-size: 11px;
+            color: #60a5fa;
+        }
+
+        .menu-section {
+            background: #fff;
+            margin: 15px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item .left {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .menu-item .icon {
+            width: 35px;
+            height: 35px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-item .title {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .menu-item .subtitle {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .menu-item .arrow {
+            color: #2563eb;
+        }
+
+        /* Navigation indicator */
+        .screen-indicator {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 8px;
+            z-index: 200;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translate(-50%, 120%);
+            background: rgba(0,0,0,0.85);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 999px;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Screen 1: Splash -->
+        <div class="phone active" data-screen="splash" data-screen-label="Splash">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">1. Splash</div>
+                <div class="screen-splash">
+                    <div class="globe-top"></div>
+                    <div style="font-size: 50px;">🧳✈️🌍</div>
+                    <h1>VIETNAM<br>EXPLORE</h1>
+                    <p>Ready To Explore?<br>Start Your Amazing Travel Journey With Us!</p>
+                    <button class="btn-primary" data-target-screen="welcome" style="width: 200px; margin-top: 20px;">EXPLORE NOW</button>
+                    <div class="globe-bottom"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Hello -->
+        <div class="phone" data-screen="welcome" data-screen-label="Welcome">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">2. Welcome</div>
+                <div class="screen-hello">
+                    <div class="status-bar dark">
+                        <span>9:41 Mon Jun 9</span>
+                        <div class="status-icons">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <i class="fas fa-battery-full"></i>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <h1>Hello!</h1>
+                        <p>You need to log in or sign up to continue your journey.</p>
+                        <button class="btn-primary" data-target-screen="signin">SIGN IN</button>
+                        <button class="btn-outline" data-target-screen="signup">SIGN UP</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Sign In Options -->
+        <div class="phone" data-screen="signin" data-screen-label="Sign In Options">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">3. Sign In Options</div>
+                <div class="screen-signin">
+                    <div class="status-bar dark">
+                        <span>9:41 Mon Jun 9</span>
+                        <div class="status-icons">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <i class="fas fa-battery-full"></i>
+                        </div>
+                    </div>
+                    <div style="position: relative; z-index: 1; margin-top: 50px;">
+                        <button class="social-btn">
+                            <i class="fab fa-google" style="color: #ea4335;"></i>
+                            Continue with Google
+                        </button>
+                        <button class="social-btn">
+                            <i class="fab fa-facebook" style="color: #1877f2;"></i>
+                            Continue with Facebook
+                        </button>
+                        <button class="social-btn">
+                            <i class="fab fa-apple" style="color: #000;"></i>
+                            Continue with Apple
+                        </button>
+                        <button class="social-btn" data-target-screen="signup">
+                            <i class="fas fa-envelope" style="color: #ea4335;"></i>
+                            Continue with Email
+                        </button>
+                        <p class="link-text">Already have an account? <a href="#" data-target-screen="signin">Login</a></p>
+                        <p class="link-text">Don't have an account? <a href="#" data-target-screen="signup">Sign up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: Sign Up -->
+        <div class="phone" data-screen="signup" data-screen-label="Sign Up">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">4. Sign Up</div>
+                <div class="screen-signup">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <div class="status-icons">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <i class="fas fa-battery-full"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-input" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-input" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-input" placeholder="Re-enter Password">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn-primary" data-target-screen="home">SIGN UP</button>
+                    </div>
+                    <p class="link-text" style="position: relative; z-index: 1;">Already have an account? <a href="#" data-target-screen="signin">Login</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 5: Home -->
+        <div class="phone" data-screen="home" data-screen-label="Home">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">5. Home</div>
+                <div class="screen-home">
+                    <div class="status-bar dark">
+                        <span>9:41 Mon Jun 9</span>
+                        <div class="status-icons">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                    <div class="home-header">
+                        <div>
+                            <div class="greeting">Hi, <span>8+11 Con Tắc Kè màu Hồng</span> 👋</div>
+                            <div class="subtitle">Explore the world 👋</div>
+                        </div>
+                        <div class="avatar" style="background: #4ade80;">👥</div>
+                    </div>
+                    <div class="search-box">
+                        <i class="fas fa-search" style="color: #999;"></i>
+                        <input type="text" placeholder="Search place">
+                    </div>
+                    <div class="section-header">
+                        <h3>Popular place</h3>
+                        <a href="#">View all</a>
+                    </div>
+                    <div class="category-tabs">
+                        <button class="category-tab active">Most view</button>
+                        <button class="category-tab">Mountain</button>
+                        <button class="category-tab">Wonder</button>
+                    </div>
+                    <div class="places-grid">
+                        <div class="place-card" data-target-screen="detail" role="button" tabindex="0" style="background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1570366583862-f91883984fde?w=300') center/cover;">
+                            <button class="bookmark"><i class="far fa-bookmark"></i></button>
+                            <div class="info">
+                                <div class="name">SaPa, Lào Cai</div>
+                                <div class="location"><i class="fas fa-map-marker-alt"></i> SaPa, Lào Cai</div>
+                            </div>
+                            <div class="rating"><i class="fas fa-star" style="color: gold;"></i> 5.0</div>
+                        </div>
+                        <div class="place-card" data-target-screen="detail" role="button" tabindex="0" style="background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=300') center/cover;">
+                            <button class="bookmark"><i class="far fa-bookmark"></i></button>
+                            <div class="info">
+                                <div class="name">Mỹ Khê, Đà Nẵng</div>
+                                <div class="location"><i class="fas fa-map-marker-alt"></i> Đà Nẵng</div>
+                            </div>
+                            <div class="rating"><i class="fas fa-star" style="color: gold;"></i> 5.0</div>
+                        </div>
+                    </div>
+                    <div class="bottom-nav">
+                        <a href="#" class="nav-item active" data-label="Home" data-target-screen="home" aria-label="Home"><i class="fas fa-home"></i></a>
+                        <a href="#" class="nav-item" data-label="History" data-target-screen="bus" aria-label="History"><i class="far fa-clock"></i></a>
+                        <a href="#" class="nav-item" data-label="Checklist" data-target-screen="hotel" aria-label="Checklist"><i class="far fa-check-square"></i></a>
+                        <a href="#" class="nav-item" data-label="Profile" data-target-screen="account" aria-label="Profile"><i class="far fa-user"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 6: Place Detail -->
+        <div class="phone" data-screen="detail" data-screen-label="Place Detail">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">6. Detail</div>
+                <div class="screen-detail">
+                    <div class="detail-image" style="background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1570366583862-f91883984fde?w=400') center/cover;">
+                        <button class="back-btn" data-target-screen="home"><i class="fas fa-chevron-left"></i></button>
+                        <button class="save-btn"><i class="far fa-bookmark"></i></button>
+                        <div class="detail-card">
+                            <div>
+                                <h2>SaPa, Lào Cai</h2>
+                                <div class="location"><i class="fas fa-map-marker-alt"></i> SaPa, Lào Cai</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span class="price-tag">Price</span>
+                                <div class="price">$999</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-tabs">
+                        <span class="active">Overview</span>
+                        <span>Details</span>
+                    </div>
+                    <div class="detail-info">
+                        <div class="info-item"><i class="far fa-clock"></i> 8h</div>
+                        <div class="info-item"><i class="fas fa-thermometer-half"></i> 15°</div>
+                        <div class="info-item"><i class="far fa-star"></i> 5.0</div>
+                    </div>
+                    <p class="detail-description">
+                        Sa Pa, in Lào Cai Province, is a beautiful mountain town known for its cool climate, terraced rice fields, and diverse ethnic cultures. Surrounded by the Hoàng Liên Sơn mountains and the peak of Fansipan, it offers stunning scenery and memorable trekking experiences.
+                    </p>
+                    <button class="book-btn" data-target-screen="bus">Book your tickets now!</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 7: Bus Tickets -->
+        <div class="phone" data-screen="bus" data-screen-label="Bus Booking">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">7. Bus Booking</div>
+                <div class="screen-booking">
+                    <div class="status-bar">
+                        <span>9:41 Mon Jun 9</span>
+                        <div class="status-icons">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                    <div class="booking-tabs">
+                        <button class="booking-tab active">Bus tickets</button>
+                        <button class="booking-tab">Hotel</button>
+                        <button class="booking-tab">Airline</button>
+                    </div>
+                    <div class="booking-form">
+                        <div style="position: relative;">
+                            <input type="text" class="form-input" placeholder="From">
+                            <input type="text" class="form-input" placeholder="To" style="margin-top: 12px;">
+                            <button class="swap-btn" style="top: 35px;"><i class="fas fa-exchange-alt fa-rotate-90"></i></button>
+                        </div>
+                        <input type="text" class="form-input" placeholder="Departure date" style="margin-top: 12px;">
+                        <div class="checkbox-row">
+                            <input type="checkbox" checked>
+                            <span>Round-trip</span>
+                        </div>
+                        <input type="text" class="form-input" placeholder="Departure date">
+                        <input type="text" class="form-input" placeholder="Number of seats" style="margin-top: 12px;">
+                    </div>
+                    <div class="bottom-nav">
+                        <a href="#" class="nav-item" data-label="Home" data-target-screen="home" aria-label="Home"><i class="fas fa-home"></i></a>
+                        <a href="#" class="nav-item active" data-label="History" data-target-screen="bus" aria-label="History"><i class="far fa-clock"></i></a>
+                        <a href="#" class="nav-item" data-label="Checklist" data-target-screen="hotel" aria-label="Checklist"><i class="far fa-check-square"></i></a>
+                        <a href="#" class="nav-item" data-label="Profile" data-target-screen="account" aria-label="Profile"><i class="far fa-user"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 8: Hotel Search -->
+        <div class="phone" data-screen="hotel" data-screen-label="Hotel Search">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">8. Hotel</div>
+                <div class="screen-booking">
+                    <div class="status-bar">
+                        <span>9:41 Mon Jun 9</span>
+                        <div class="status-icons">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                    <div class="booking-tabs">
+                        <button class="booking-tab">Bus tickets</button>
+                        <button class="booking-tab active">Hotel</button>
+                        <button class="booking-tab">Airline</button>
+                    </div>
+                    <div class="booking-form">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active">All</button>
+                            <button class="filter-tab">Hotel</button>
+                            <button class="filter-tab">Villa</button>
+                            <button class="filter-tab">Apartment</button>
+                        </div>
+                        <input type="text" class="form-input" placeholder="City, location or hotel name:">
+                        <input type="text" class="form-input" placeholder="Check-in and check-out dates" style="margin-top: 12px;">
+                        <input type="text" class="form-input" value="1 Room, 1 adult, 0 children" style="margin-top: 12px;">
+                        <button class="search-btn" data-target-screen="guests" style="margin-top: 30px;">Search</button>
+                    </div>
+                    <div class="bottom-nav">
+                        <a href="#" class="nav-item" data-label="Home" data-target-screen="home" aria-label="Home"><i class="fas fa-home"></i></a>
+                        <a href="#" class="nav-item" data-label="History" data-target-screen="bus" aria-label="History"><i class="far fa-clock"></i></a>
+                        <a href="#" class="nav-item active" data-label="Checklist" data-target-screen="hotel" aria-label="Checklist"><i class="far fa-check-square"></i></a>
+                        <a href="#" class="nav-item" data-label="Profile" data-target-screen="account" aria-label="Profile"><i class="far fa-user"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 9: Add Guest -->
+        <div class="phone" data-screen="guests" data-screen-label="Guest Selection">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">9. Guests</div>
+                <div class="screen-guest">
+                    <div class="status-bar dark">
+                        <span>9:41 Mon Jun 9</span>
+                        <div class="status-icons">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                    <div class="guest-header">Add Guest & Room</div>
+                    <div class="guest-row">
+                        <div class="label">
+                            <i class="fas fa-bed"></i>
+                            <span>Room</span>
+                        </div>
+                        <div class="counter">
+                            <button class="counter-btn" data-action="decrement">-</button>
+                            <span class="counter-value" data-min="1">1</span>
+                            <button class="counter-btn" data-action="increment">+</button>
+                        </div>
+                    </div>
+                    <div class="guest-row">
+                        <div class="label">
+                            <i class="fas fa-user-friends"></i>
+                            <span>Adult</span>
+                        </div>
+                        <div class="counter">
+                            <button class="counter-btn" data-action="decrement">-</button>
+                            <span class="counter-value" data-min="1">1</span>
+                            <button class="counter-btn" data-action="increment">+</button>
+                        </div>
+                    </div>
+                    <div class="guest-row">
+                        <div class="label">
+                            <i class="fas fa-child"></i>
+                            <span>Children</span>
+                        </div>
+                        <div class="counter">
+                            <button class="counter-btn" data-action="decrement">-</button>
+                            <span class="counter-value" data-min="0">0</span>
+                            <button class="counter-btn" data-action="increment">+</button>
+                        </div>
+                    </div>
+                    <button class="apply-btn" data-target-screen="hotel">Apply</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 10: Account -->
+        <div class="phone" data-screen="account" data-screen-label="Account">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="screen-indicator">10. Account</div>
+                <div class="screen-account">
+                    <div class="status-bar">
+                        <span>9:41 Mon Jun 9</span>
+                        <div class="status-icons">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                    <div class="account-header">
+                        <i class="fas fa-bars"></i>
+                        <h2>Tài khoản</h2>
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="profile-card">
+                        <div class="avatar" style="background: #4ade80;">👥</div>
+                        <div class="info">
+                            <div class="name">8+11 Con Tắc Kè màu Hồng</div>
+                            <div class="email">Google</div>
+                            <a href="#" class="link">View my profile</a>
+                        </div>
+                    </div>
+                    <div class="menu-section">
+                        <div class="menu-item">
+                            <div class="left">
+                                <div class="icon"><i class="far fa-credit-card"></i></div>
+                                <div>
+                                    <div class="title">My card</div>
+                                    <div class="subtitle">Super fast booking with just one touch</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                        <div class="menu-item">
+                            <div class="left">
+                                <div class="icon"><i class="fas fa-coins" style="color: #f59e0b;"></i></div>
+                                <div>
+                                    <div class="title">0 point</div>
+                                    <div class="subtitle">Accumulate point and redeem them to save money</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                        <div class="menu-item">
+                            <div class="left">
+                                <div class="icon"><i class="fas fa-undo"></i></div>
+                                <div>
+                                    <div class="title">Refund</div>
+                                    <div class="subtitle">Track refunds and manage banking details</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                    </div>
+                    <div class="menu-section">
+                        <div class="menu-item">
+                            <div class="left">
+                                <div class="icon"><i class="far fa-question-circle"></i></div>
+                                <div>
+                                    <div class="title">Assistance</div>
+                                    <div class="subtitle">The place to answer all your questions</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </div>
+                    </div>
+                    <div class="bottom-nav">
+                        <a href="#" class="nav-item" data-label="Home" data-target-screen="home" aria-label="Home"><i class="fas fa-home"></i></a>
+                        <a href="#" class="nav-item" data-label="History" data-target-screen="bus" aria-label="History"><i class="far fa-clock"></i></a>
+                        <a href="#" class="nav-item" data-label="Checklist" data-target-screen="hotel" aria-label="Checklist"><i class="far fa-check-square"></i></a>
+                        <a href="#" class="nav-item active" data-label="Profile" data-target-screen="account" aria-label="Profile"><i class="fas fa-user"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toastEl = document.getElementById('toast');
+            let toastTimeout;
+
+            const showToast = (message) => {
+                if (!toastEl) return;
+                toastEl.textContent = message;
+                toastEl.classList.add('show');
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toastEl.classList.remove('show');
+                }, 2200);
+            };
+
+            const setupToggleGroup = (parentSelector, childSelector, options = {}) => {
+                const { activeClass = 'active', toastSuffix = 'selected', onBeforeToggle } = options;
+                document.querySelectorAll(parentSelector).forEach((parent) => {
+                    const items = parent.querySelectorAll(childSelector);
+                    items.forEach((item) => {
+                        item.addEventListener('click', (event) => {
+                            if (typeof onBeforeToggle === 'function') {
+                                onBeforeToggle(event, item, parent);
+                            }
+                            items.forEach((el) => el.classList.remove(activeClass));
+                            item.classList.add(activeClass);
+                            const label = item.dataset.label || item.textContent.trim() || 'Updated';
+                            showToast(`${label} ${toastSuffix}`);
+                        });
+                    });
+                });
+            };
+
+            setupToggleGroup('.category-tabs', '.category-tab', { toastSuffix: 'category' });
+            setupToggleGroup('.detail-tabs', 'span', { toastSuffix: 'view' });
+            setupToggleGroup('.booking-tabs', '.booking-tab', { toastSuffix: 'option' });
+            setupToggleGroup('.filter-tabs', '.filter-tab', { toastSuffix: 'filter' });
+
+            const screenElements = Array.from(document.querySelectorAll('.phone[data-screen]'));
+            const screenRegistry = new Map();
+            screenElements.forEach((screenEl) => {
+                screenRegistry.set(screenEl.dataset.screen, screenEl);
+            });
+
+            let currentScreen = screenElements.find((screenEl) => screenEl.classList.contains('active'))?.dataset.screen
+                || screenElements[0]?.dataset.screen
+                || null;
+
+            const navHighlightMap = {
+                guests: 'hotel'
+            };
+
+            const syncBottomNav = () => {
+                const highlightScreen = navHighlightMap[currentScreen] || currentScreen;
+                document.querySelectorAll('.bottom-nav').forEach((nav) => {
+                    nav.querySelectorAll('.nav-item').forEach((item) => {
+                        if (item.dataset.targetScreen === highlightScreen) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                });
+            };
+
+            const showScreen = (nextScreen, { announce = true } = {}) => {
+                if (!nextScreen || !screenRegistry.has(nextScreen)) {
+                    return;
+                }
+                if (nextScreen === currentScreen) {
+                    if (announce) {
+                        showToast('You are already here');
+                    }
+                    return;
+                }
+
+                const currentEl = screenRegistry.get(currentScreen);
+                currentEl?.classList.remove('active');
+
+                const nextEl = screenRegistry.get(nextScreen);
+                nextEl?.classList.add('active');
+                currentScreen = nextScreen;
+                syncBottomNav();
+                const label = nextEl?.dataset.screenLabel || nextScreen;
+                if (announce) {
+                    showToast(`${label} interface`);
+                }
+            };
+
+            const handleTargetTrigger = (event) => {
+                event.preventDefault();
+                const target = event.currentTarget.dataset.targetScreen;
+                showScreen(target);
+            };
+
+            document.querySelectorAll('[data-target-screen]').forEach((element) => {
+                element.addEventListener('click', handleTargetTrigger);
+                if (!['A', 'BUTTON'].includes(element.tagName)) {
+                    element.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            showScreen(element.dataset.targetScreen);
+                        }
+                    });
+                }
+            });
+
+            syncBottomNav();
+
+            document.querySelectorAll('.swap-btn').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const container = btn.closest('div');
+                    if (!container) return;
+                    const inputs = container.querySelectorAll('input');
+                    if (inputs.length >= 2) {
+                        const firstValue = inputs[0].value;
+                        inputs[0].value = inputs[1].value;
+                        inputs[1].value = firstValue;
+                        showToast('Swapped departure and arrival');
+                    }
+                });
+            });
+
+            const counterRows = document.querySelectorAll('.guest-row .counter');
+            counterRows.forEach((counter) => {
+                const display = counter.querySelector('.counter-value');
+                const buttons = counter.querySelectorAll('.counter-btn');
+                const min = parseInt(display?.dataset.min ?? '0', 10);
+                buttons.forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const delta = btn.dataset.action === 'increment' ? 1 : -1;
+                        let value = parseInt(display.textContent, 10) || 0;
+                        value = Math.max(min, value + delta);
+                        display.textContent = value;
+                        const label = counter.closest('.guest-row')?.querySelector('.label span')?.textContent.trim() || 'Guest';
+                        showToast(`${label}: ${value}`);
+                    });
+                });
+            });
+
+            const actionableSelector = '.btn-primary, .btn-outline, .social-btn, .book-btn, .search-btn, .apply-btn';
+            document.querySelectorAll(actionableSelector).forEach((button) => {
+                button.addEventListener('click', () => {
+                    if (button.dataset.targetScreen) {
+                        return;
+                    }
+                    const text = button.textContent.replace(/\s+/g, ' ').trim();
+                    showToast(`${text || 'Action'} tapped`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
